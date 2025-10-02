@@ -43,14 +43,14 @@ El **Sistema de Inventarios y Ventas con IaC en AWS** está diseñado para ser e
 ### 3.1 Estructura de carpetas  
 
 terraform/
- ├── main.tf          # Recursos principales (EC2, RDS, S3, ELB, ASG)
- ├── variables.tf     # Variables de configuración
- ├── outputs.tf       # Salidas de recursos para integración con Ansible o CI/CD
- ├── ec2/             # Módulo de instancias EC2
- ├── rds/             # Módulo de base de datos RDS
- ├── s3/              # Módulo de almacenamiento S3
- ├── elb/             # Módulo de balanceador de carga
- └── asg/             # Módulo de Auto Scaling Groups
+  main.tf        # Recursos principales (EC2, RDS, S3, ELB, ASG)
+  variables.tf   # Variables de configuración
+  outputs.tf     # Salidas de recursos para integración con Ansible o CI/CD
+  ec2/           # Módulo de instancias EC2
+  rds/           # Módulo de base de datos RDS
+  s3/            # Módulo de almacenamiento S3
+  elb/           # Módulo de balanceador de carga
+  asg/           # Módulo de Auto Scaling Groups
 
 ---
 
@@ -69,15 +69,15 @@ terraform/
 ### 3.3 Variables importantes  
 
 terraform/
- ├── main.tf          # Recursos principales (EC2, RDS, S3, ELB, ASG)
- ├── variables.tf     # Variables de configuración
- ├── outputs.tf       # Salidas de recursos para integración con Ansible o CI/CD
- ├── ec2/             # Módulo de instancias EC2
- ├── rds/             # Módulo de base de datos RDS
- ├── s3/              # Módulo de almacenamiento S3
- ├── elb/             # Módulo de balanceador de carga
- └── asg/             # Módulo de Auto Scaling Groups 
-
+  main.tf        # Recursos principales (EC2, RDS, S3, ELB, ASG)
+  variables.tf   # Variables de configuración
+  outputs.tf     # Salidas de recursos para integración con Ansible o CI/CD
+  ec2/           # Módulo de instancias EC2
+  rds/           # Módulo de base de datos RDS
+  s3/            # Módulo de almacenamiento S3
+  elb/           # Módulo de balanceador de carga
+  asg/           # Módulo de Auto Scaling Groups
+  
 ---
 
 ### 3.4 Comandos básicos  
@@ -94,12 +94,12 @@ terraform destroy    # Eliminar toda la infraestructura
 ### 4.1 Estructura de carpetas  
 
 ansible/
-├── hosts.yml
-├── playbooks/
-│   ├── setup-webserver.yml   # Configuración inicial del servidor
-│   └── deploy-app.yml        # Despliegue de la aplicación PHP
-└── roles/
-    └── webserver/            # Tareas reutilizables
+  hosts.yml
+  playbooks/
+    setup-webserver.yml   # Configuración inicial del servidor
+    deploy-app.yml        # Despliegue de la aplicación PHP
+  roles/
+    webserver/            # Tareas reutilizables
 
 ---
 
@@ -152,5 +152,6 @@ ansible-playbook -i hosts.yml playbooks/deploy-app.yml
 - Terraform Documentation → https://developer.hashicorp.com/terraform/docs  
 - Ansible Documentation → https://docs.ansible.com/  
 - AWS Architecture Best Practices → https://aws.amazon.com/architecture/  
+
 
 
