@@ -1,140 +1,169 @@
-# Manual de Usuario  
-Sistema de Inventario y Ventas  
+# Manual de Usuario
+Sistema de Inventario y Ventas
 
 ---
 
 ## 1. Introducción
-El Sistema de Inventario y Ventas está diseñado para facilitar la gestión de productos, el control de stock y el registro de transacciones de manera eficiente.  
-Permite a los usuarios administrar productos, realizar ventas, generar reportes y mantener un control ordenado del inventario.
+El **Sistema de Inventario y Ventas** es una herramienta desarrollada para optimizar los procesos de administración de productos, gestión de inventario y control de ventas en empresas de distintos tamaños.  
+Su propósito principal es **reducir errores manuales, mejorar la organización del negocio y facilitar la toma de decisiones** a través de reportes y estadísticas claras.
+
+El sistema está diseñado con una interfaz sencilla e intuitiva, pensada para que tanto **administradores** como **vendedores** puedan usarlo sin necesidad de conocimientos técnicos avanzados.  
+Gracias a su arquitectura escalable, puede ejecutarse de manera **local** (en un servidor propio) o en la **nube**, garantizando seguridad, disponibilidad y crecimiento a largo plazo.
 
 ---
 
 ## 2. Requisitos del Sistema
-- Navegador web moderno (Chrome, Firefox, Edge).  
-- Conexión a internet si la aplicación está desplegada en la nube.  
-- Usuario y contraseña para iniciar sesión (roles: **Administrador**, **Vendedor**).  
-- Acceso a la base de datos (MySQL o MariaDB) si se trabaja localmente.  
+Para garantizar un funcionamiento óptimo del sistema, se recomienda cumplir con los siguientes requisitos:
+
+- **Software**:
+  - Navegador web actualizado (Google Chrome, Mozilla Firefox o Microsoft Edge).
+  - Servidor web (Apache o Nginx).
+  - Base de datos **MySQL** o **MariaDB**.
+  - PHP (versión recomendada >= 8.0).
+- **Hardware mínimo (modo local)**:
+  - Procesador dual core.
+  - 4 GB de memoria RAM.
+  - 10 GB de espacio libre en disco.
+- **Requisitos de acceso (modo nube)**:
+  - Conexión estable a internet.
+  - Usuario y contraseña válidos (rol: Administrador o Vendedor).
+  - Acceso a la URL oficial del sistema.
 
 ---
 
 ## 3. Inicio de Sesión
-1. Abrir el navegador y acceder a la URL de la aplicación.  
-2. Ingresar usuario y contraseña.  
+El acceso al sistema es seguro y requiere autenticación:
+
+1. Abrir el navegador web y dirigirse a la dirección URL proporcionada por el administrador.  
+2. Ingresar **usuario y contraseña** en el formulario de inicio.  
 3. Presionar el botón **Iniciar Sesión**.  
-4. Si las credenciales son correctas, se mostrará el **Dashboard principal**.  
+4. Si los datos son correctos, se cargará el **Dashboard principal**.  
+5. En caso de error, el sistema mostrará un mensaje indicando que las credenciales no son válidas.  
+
+⚠️ **Recomendación:** cambiar la contraseña la primera vez que se accede al sistema.
 
 ---
 
 ## 4. Dashboard
-El Dashboard muestra un resumen de:  
-- Productos en inventario.  
-- Ventas recientes.  
-- Alertas de stock bajo.  
-- Acceso rápido a módulos principales: **Productos**, **Inventario**, **Ventas**, **Reportes**.  
+El **Dashboard** funciona como la pantalla principal y muestra un resumen de la operación en tiempo real:
+
+- Cantidad total de productos registrados.  
+- Ventas realizadas durante el día o el mes.  
+- Alertas de productos con **stock bajo o agotado**.  
+- Gráficas con tendencias de ventas e inventario.  
+- Accesos rápidos a los módulos principales: **Productos, Inventario, Ventas, Reportes y Usuarios**.  
 
 ---
 
 ## 5. Gestión de Productos
+La correcta gestión de productos es clave para mantener un inventario actualizado.
 
 ### 5.1 Agregar Producto
 1. Ir al módulo **Productos**.  
-2. Presionar el botón **Agregar Producto**.  
-3. Completar los campos:  
-   - Nombre  
-   - Categoría  
-   - Precio de venta  
-   - Stock inicial  
-   - Descripción (opcional)  
-4. Presionar **Guardar**.  
-5. El producto se añadirá al inventario y estará disponible para ventas.  
+2. Presionar **Agregar Producto**.  
+3. Completar la información solicitada:  
+   - Nombre del producto.  
+   - Categoría.  
+   - Precio de venta.  
+   - Stock inicial.  
+   - Descripción (opcional).  
+4. Guardar los cambios.  
+✅ El producto quedará disponible para ventas y reportes.  
 
 ### 5.2 Editar Producto
-1. En el listado de productos, seleccionar el producto a modificar.  
-2. Presionar **Editar**.  
+1. Seleccionar el producto a modificar desde la lista.  
+2. Hacer clic en **Editar**.  
 3. Actualizar los campos necesarios.  
-4. Presionar **Guardar Cambios**.  
+4. Guardar los cambios.  
+💡 Útil para corregir precios o actualizar descripciones.  
 
 ### 5.3 Eliminar Producto
-1. Seleccionar el producto a eliminar.  
-2. Presionar **Eliminar**.  
-3. Confirmar la acción.  
-4. El producto será removido del inventario.  
+1. Seleccionar el producto que se desea borrar.  
+2. Hacer clic en **Eliminar**.  
+3. Confirmar la acción en el cuadro de diálogo.  
+⚠️ Una vez eliminado, no podrá recuperarse.  
 
 ---
 
 ## 6. Control de Inventario
+El módulo de inventario permite registrar entradas y salidas de stock en tiempo real.
 
 ### 6.1 Registrar Entrada de Stock
-1. Ir al módulo **Inventario**.  
+- Se usa para aumentar la cantidad de productos (nuevas compras, reposiciones).  
+1. Ingresar al módulo **Inventario**.  
 2. Seleccionar **Agregar Entrada**.  
 3. Indicar producto, cantidad y fecha.  
-4. Presionar **Registrar**.  
-5. El stock se actualizará automáticamente.  
+4. Confirmar en **Registrar**.  
 
 ### 6.2 Registrar Salida de Stock
-1. Ir al módulo **Inventario**.  
+- Se usa para ventas, devoluciones o ajustes.  
+1. Ingresar al módulo **Inventario**.  
 2. Seleccionar **Agregar Salida**.  
-3. Indicar producto, cantidad y motivo (venta, ajuste, etc.).  
-4. Presionar **Registrar**.  
-5. El stock se actualizará automáticamente.  
+3. Indicar producto, cantidad y motivo (venta, devolución, ajuste).  
+4. Confirmar en **Registrar**.  
 
 ---
 
 ## 7. Registro de Ventas
-1. Ir al módulo **Ventas**.  
+El sistema permite realizar ventas de forma ágil y automática:
+
+1. Acceder al módulo **Ventas**.  
 2. Presionar **Nueva Venta**.  
-3. Seleccionar productos y cantidades.  
-4. Revisar el total de la venta.  
-5. Presionar **Finalizar Venta**.  
-6. El stock de los productos se ajustará automáticamente.  
-7. Se generará un comprobante de venta (opcional: PDF o impresión).  
+3. Seleccionar productos, indicar cantidades y verificar precios.  
+4. Revisar el total de la transacción.  
+5. Confirmar en **Finalizar Venta**.  
+6. El stock de cada producto se ajustará automáticamente.  
+7. Se podrá generar un comprobante (PDF o impresión física).  
 
 ---
 
 ## 8. Reportes
-1. Ir al módulo **Reportes**.  
-2. Seleccionar el tipo de reporte:  
-   - Inventario actual  
-   - Ventas por fecha  
-   - Productos más vendidos  
-3. Configurar filtros (fecha, categoría, vendedor).  
-4. Presionar **Generar Reporte**.  
-5. Visualizar y/o exportar el reporte en **PDF o Excel**.  
+El sistema genera reportes que facilitan el análisis de la operación:
+
+- **Inventario actual:** lista de todos los productos y sus existencias.  
+- **Ventas por fecha:** historial de transacciones en un rango específico.  
+- **Productos más vendidos:** ranking de los artículos con mayor rotación.  
+
+Opciones de exportación:  
+- **PDF** (para impresión o archivo digital).  
+- **Excel** (para análisis detallado).  
 
 ---
 
-## 9. Gestión de Usuarios
+## 9. Gestión de Usuarios (Opcional)
+Solo accesible para usuarios con rol **Administrador**.
 
 ### 9.1 Agregar Usuario
 1. Ir al módulo **Usuarios**.  
-2. Presionar **Agregar Usuario**.  
-3. Completar los datos:  
-   - Nombre  
-   - Correo electrónico  
-   - Rol (Administrador / Vendedor)  
-4. Presionar **Guardar**.  
+2. Seleccionar **Agregar Usuario**.  
+3. Completar nombre, correo y rol.  
+4. Guardar cambios.  
 
 ### 9.2 Editar Usuario
-1. Seleccionar usuario.  
-2. Presionar **Editar**.  
-3. Actualizar información y guardar cambios.  
+1. Seleccionar un usuario existente.  
+2. Modificar la información necesaria.  
+3. Guardar cambios.  
 
 ### 9.3 Eliminar Usuario
-1. Seleccionar usuario.  
+1. Seleccionar al usuario.  
 2. Presionar **Eliminar**.  
 3. Confirmar la acción.  
 
 ---
 
 ## 10. Consejos y Buenas Prácticas
-- Mantener actualizado el stock después de cada venta.  
-- Revisar los reportes regularmente para controlar pérdidas o faltantes.  
-- No compartir credenciales de administrador con personal no autorizado.  
-- Realizar respaldos periódicos de la base de datos.  
+- Mantener siempre actualizado el stock después de cada transacción.  
+- Revisar los reportes semanalmente para detectar anomalías.  
+- Cambiar contraseñas de forma periódica para mayor seguridad.  
+- Realizar respaldos automáticos de la base de datos.  
+- Asignar el rol correcto a cada usuario para evitar accesos indebidos.  
 
 ---
 
 ## 11. Soporte Técnico
-En caso de problemas con la aplicación, contactar al equipo de soporte:  
+En caso de problemas con la aplicación, el usuario puede comunicarse con el equipo de soporte:  
+
 - 📧 Correo: **alessandrorr1007@gmail.com**  
 - 📞 Teléfono: **(+51) 935 797 978**    
+
+El tiempo de respuesta promedio es de **24 horas hábiles**.
