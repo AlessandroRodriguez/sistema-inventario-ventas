@@ -68,10 +68,15 @@ terraform/
 
 ### 3.3 Variables importantes  
 
-- `aws_region` → Región de AWS donde se desplegará la infraestructura.  
-- `instance_type` → Tipo de instancia EC2 a utilizar.  
-- `db_name`, `db_user`, `db_password` → Configuración de la base de datos.  
-- `vpc_id`, `subnet_ids` → Identificadores de red y subredes donde se desplegarán los recursos.  
+terraform/
+ ├── main.tf          # Recursos principales (EC2, RDS, S3, ELB, ASG)
+ ├── variables.tf     # Variables de configuración
+ ├── outputs.tf       # Salidas de recursos para integración con Ansible o CI/CD
+ ├── ec2/             # Módulo de instancias EC2
+ ├── rds/             # Módulo de base de datos RDS
+ ├── s3/              # Módulo de almacenamiento S3
+ ├── elb/             # Módulo de balanceador de carga
+ └── asg/             # Módulo de Auto Scaling Groups 
 
 ---
 
@@ -147,4 +152,5 @@ ansible-playbook -i hosts.yml playbooks/deploy-app.yml
 - Terraform Documentation → https://developer.hashicorp.com/terraform/docs  
 - Ansible Documentation → https://docs.ansible.com/  
 - AWS Architecture Best Practices → https://aws.amazon.com/architecture/  
+
 
