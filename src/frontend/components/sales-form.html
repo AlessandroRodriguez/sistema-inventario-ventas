@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Venta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .form-container {
+            background: #fff;
+            max-width: 400px;
+            margin: 40px auto;
+            padding: 30px 25px 20px 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        h2 {
+            text-align: center;
+            color: #2d3e50;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        .form-actions {
+            display: flex;
+            justify-content: center;
+        }
+        button {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 5px;
+            font-size: 15px;
+            cursor: pointer;
+            background: #27ae60;
+            color: #fff;
+        }
+        .error {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .success {
+            color: #27ae60;
+            font-size: 14px;
+            margin-bottom: 10px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Registrar Venta</h2>
+        <form id="saleForm" autocomplete="off">
+            <div class="error" id="errorMsg"></div>
+            <div class="success" id="successMsg"></div>
+            <label for="productSelect">Producto:</label>
+            <select id="productSelect"></select>
+            <label for="quantity">Cantidad:</label>
+            <input type="number" id="quantity" required>
+            <label for="paymentMethod">Método de pago:</label>
+            <select id="paymentMethod">
+                <option value="Efectivo">Efectivo</option>
+                <option value="Tarjeta">Tarjeta</option>
+                <option value="Transferencia">Transferencia</option>
+            </select>
+            <div class="form-actions">
+                <button type="submit">Registrar venta</button>
+            </div>
+        </form>
+    </div>
+    <script src="products.js"></script>
+    <script src="sales.js"></script>
+</body>
+</html>
