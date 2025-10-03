@@ -209,4 +209,3 @@ ansible-playbook -i hosts.yml playbooks/deploy-app.yml
 - Terraform Documentation → https://developer.hashicorp.com/terraform/docs  
 - Ansible Documentation → https://docs.ansible.com/  
 - AWS Architecture Best Practices → https://aws.amazon.com/architecture/ 
->>>>>>> a6d74d14cee279f3f1beb67842949b5871b2ceb1
