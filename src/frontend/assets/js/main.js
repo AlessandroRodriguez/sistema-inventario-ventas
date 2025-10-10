@@ -1,6 +1,11 @@
+// ==== Importación de funciones del API ====
+import { checkAPIConnection } from "./api.js";
+
 // ==== Inicialización de la app ====
 document.addEventListener("DOMContentLoaded", () => {
   showLoader();
+  checkAPIConnection(); // ✅ Verifica conexión con el backend
+
   // Cargar header y footer
   loadComponent("components/header.html", "app-header")
     .then(() => loadComponent("components/footer.html", "app-footer"))
@@ -20,6 +25,7 @@ function showLoader() {
   }
   loader.style.display = "block";
 }
+
 function hideLoader() {
   const loader = document.getElementById("global-loader");
   if (loader) loader.style.display = "none";
@@ -107,6 +113,7 @@ function clearFormFields() {
   document.querySelectorAll("input, textarea").forEach(el => el.value = "");
 }
 
-// ==== Utilidades ====
+// ==== Utilidades globales ====
 window.login = login;
 window.navigate = navigate;
+

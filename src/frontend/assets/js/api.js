@@ -30,4 +30,14 @@ async function fetchAPI(endpoint, method = "GET", body = null, extraHeaders = {}
   }
 }
 
-export { fetchAPI, API_URL };
+// 🔹 Verificar conexión con el backend
+async function checkAPIConnection() {
+  const res = await fetchAPI("test"); // Llama al endpoint /api/test
+  if (res?.message) {
+    console.log("✅ Conexión exitosa con el backend:", res.message);
+  } else {
+    console.error("❌ Error al conectar con el backend:", res);
+  }
+}
+
+export { fetchAPI, API_URL, checkAPIConnection };

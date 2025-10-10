@@ -1,65 +1,83 @@
+import { fetchAPI, API_URL } from "./api.js";
+import { updateInventory } from "./inventory.js";
+
 let sales = JSON.parse(localStorage.getItem("sales")) || [];
-let products = JSON.parse(localStorage.getItem("products")) || [];
+let useAPI = false;
 
-// Registrar venta
-function createSale(sale) {
-    const productIndex = products.findIndex(p => p.name === sale.product);
-    if (productIndex !== -1 && products[productIndex].stock >= sale.quantity) {
-        products[productIndex].stock -= sale.quantity;
-        localStorage.setItem("products", JSON.stringify(products));
-        sales.push(sale);
-        localStorage.setItem("sales", JSON.stringify(sales));
-        return { success: true, message: "Venta registrada correctamente." };
-    } else {
-        return { success: false, message: "Stock insuficiente." };
+// 🔹 Detectar conexión con backend
+(async () => {
+  try {
+    const res = await fetch(`${API_URL}/test`);
+    if (res.ok) {
+      useAPI = true;
+      console.log("✅ Backend detectado: modo API activado (Ventas)");
+      sales = await fetchAPI("sales");
     }
+  } catch {
+    console.warn("⚠️ No se detectó backend, usando localStorage (Ventas)");
+  }
+  renderSales();
+})();
+
+// === Obtener ventas ===
+export async function getSales() {
+  if (useAPI) return await fetchAPI("sales");
+  return sales;
 }
 
-// Obtener historial de ventas
-function getSales() {
-    return sales;
+// === Registrar venta ===
+export async function addSale(sale) {
+  if (useAPI) {
+    await fetchAPI("sales", "POST", sale);
+  } else {
+    sales.push(sale);
+    localStorage.setItem("sales", JSON.stringify(sales));
+  }
+
+  // Reducir stock en inventario
+  await updateInventory(sale.productId, -sale.quantity);
+  renderSales();
 }
 
-// Cargar productos en el select
-function loadProductsToSelect() {
-    const select = document.getElementById("productSelect");
-    if (!select) return;
-    select.innerHTML = "";
-    products.forEach(p => {
-        let option = document.createElement("option");
-        option.value = p.name;
-        option.textContent = `${p.name} (Stock: ${p.stock})`;
-        select.appendChild(option);
-    });
+// === Renderizar tabla de ventas ===
+export async function renderSales() {
+  const table = document.querySelector("#salesTable tbody");
+  if (!table) return;
+
+  const data = await getSales();
+  table.innerHTML = "";
+
+  (data || []).forEach((s, i) => {
+    table.innerHTML += `
+      <tr>
+        <td>${s.productName}</td>
+        <td>${s.quantity}</td>
+        <td>${s.total}</td>
+        <td>${new Date(s.date).toLocaleString()}</td>
+      </tr>
+    `;
+  });
 }
 
-// Inicializar formulario
-document.addEventListener("DOMContentLoaded", () => {
-    loadProductsToSelect();
-    const form = document.getElementById("saleForm");
-    const errorMsg = document.getElementById("errorMsg");
-    const successMsg = document.getElementById("successMsg");
-    if (form) {
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-            errorMsg.style.display = "none";
-            successMsg.style.display = "none";
-            const sale = {
-                product: document.getElementById("productSelect").value,
-                quantity: parseInt(document.getElementById("quantity").value),
-                paymentMethod: document.getElementById("paymentMethod").value,
-                date: new Date().toLocaleString(),
-            };
-            const result = createSale(sale);
-            if (result.success) {
-                successMsg.innerText = result.message;
-                successMsg.style.display = "block";
-                form.reset();
-                loadProductsToSelect();
-            } else {
-                errorMsg.innerText = result.message;
-                errorMsg.style.display = "block";
-            }
-        });
-    }
-});
+// === Registrar nueva venta (botón/formulario) ===
+window.registerSale = async function () {
+  const productId = document.getElementById("sale-product").value;
+  const quantity = parseInt(document.getElementById("sale-quantity").value);
+  const total = parseFloat(document.getElementById("sale-total").value);
+
+  const sale = {
+    productId,
+    productName: document.querySelector(`#sale-product option[value='${productId}']`)?.textContent || "Desconocido",
+    quantity,
+    total,
+    date: new Date().toISOString(),
+  };
+
+  await addSale(sale);
+  document.getElementById("sale-form").reset();
+  alert("✅ Venta registrada correctamente");
+};
+
+// === Inicializar ===
+document.addEventListener("DOMContentLoaded", renderSales);
+// Cargar productos en el formulario de ventas
