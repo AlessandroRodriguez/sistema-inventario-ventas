@@ -66,8 +66,8 @@ async function loadComponent(url, targetId) {
   }
 }
 
-// ==== Login básico (demo) ====
-function login(event) {
+// ==== Login con validación real (contra backend) ====
+async function login(event) {
   event.preventDefault();
   
   const userInput = document.getElementById("username");
@@ -85,16 +85,31 @@ function login(event) {
     showAlert("Complete todos los campos", "advertencia");
     return;
   }
-  
-  // ✅ Validación temporal para testeos
-  if (user === "admin" && pass === "1234") {
-    showAlert("Bienvenido, admin!", "exito");
-    clearFormFields();
-    navigate("dashboard");
-  } else {
-    showAlert("Usuario o contraseña incorrectos", "error");
+
+  try {
+    // 🔄 Enviar al backend
+    const response = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user, pass }),
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      showAlert(data.message, "exito");
+      clearFormFields();
+      navigate("dashboard");
+    } else {
+      showAlert(data.message || "Usuario o contraseña incorrectos", "error");
+    }
+
+  } catch (err) {
+    console.error("Error de conexión:", err);
+    showAlert("No se pudo conectar con el servidor", "error");
   }
 }
+
 
 // ==== Navegación entre secciones ====
 function navigate(section) {
