@@ -15,6 +15,7 @@ variable "db_username" {
 	type        = string
 	default     = "admin"
 }
+
 variable "project_name" {
 	description = "Nombre del proyecto para recursos AWS"
 	type        = string
@@ -43,4 +44,29 @@ variable "ecs_app_port" {
 	description = "Puerto de la aplicación ECS"
 	type        = number
 	default     = 8000
+}
+
+variable "rds_username" {
+  description = "Username for RDS MySQL"
+  type        = string
+}
+
+variable "rds_instance_class" {
+  description = "RDS instance class"
+  type        = string
+}
+
+variable "rds_allocated_storage" {
+  description = "Allocated storage for RDS"
+  type        = number
+}
+
+variable "rds_db_name" {
+  description = "Database name for RDS"
+  type        = string
+}
+
+variable "private_subnet_ids" {
+  description = "List of private subnet IDs for RDS subnet group"
+  type        = list(string)
 }

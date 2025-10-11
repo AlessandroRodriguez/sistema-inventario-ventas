@@ -11,7 +11,6 @@ resource "aws_db_instance" "mysql" {
   identifier         = "${var.project_name}-db"
   engine             = "mysql"
   instance_class     = var.db_instance_class
-  allocated_storage  = 20
   username           = var.db_username
   password           = random_password.db_password.result
   db_name            = var.db_name
@@ -61,95 +60,34 @@ terraform {
   }
 }
 
-resource "random_password" "db_password" {
-  length  = 32
+resource "random_password" "rds" {
+  length  = 16
   special = true
 }
 
-resource "aws_secretsmanager_secret" "db_password" {
-  name                    = "${var.project_name}/rds/password"
-  recovery_window_in_days = 7
-  tags = {
-    Name = "${var.project_name}-db-password"
-    Environment = var.environment
-  }
+resource "random_password" "rds" {
+  length  = 16
+  special = true
 }
 
-# Versión del secreto
-resource "aws_secretsmanager_secret_version" "db_password" {
-  secret_id     = aws_secretsmanager_secret.db_password.id
-  secret_string = random_password.db_password.result
+resource "aws_db_subnet_group" "rds" {
+  name       = "${var.project_name}-rds-subnet-group"
+  subnet_ids = var.private_subnet_ids
 }
 
-resource "aws_db_subnet_group" "db_subnets" {
-  name       = "${var.project_name}-db-subnet"
-  subnet_ids = aws_subnet.private[*].id
-  tags = {
-    Name = "${var.project_name}-db-subnet"
-    Environment = var.environment
-  }
+resource "aws_db_instance" "rds" {
+  identifier              = "${var.project_name}-rds"
+  engine                  = "mysql"
+  instance_class          = var.rds_instance_class
+  allocated_storage       = var.rds_allocated_storage
+  db_name                 = var.rds_db_name
+  username                = var.rds_username
+  password                = random_password.rds.result
+  db_subnet_group_name    = aws_db_subnet_group.rds.name
+  vpc_security_group_ids  = [aws_security_group.rds_sg.id]
+  skip_final_snapshot     = true
+  publicly_accessible     = false
 }
-
-resource "aws_db_instance" "mysql" {
-  identifier     = "${var.project_name}-db"
-  engine         = "mysql"
-  engine_version = "8.0.39"
-  instance_class = var.db_instance_class
-  allocated_storage = 20
-  storage_encrypted = true
-  storage_type      = "gp3"
-  db_name  = var.db_name
-  username = var.db_username
-  password = random_password.db_password.result
-  db_subnet_group_name = aws_db_subnet_group.db_subnets.name
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  multi_az = true
-  skip_final_snapshot = true
-  tags = {
-    Name = "${var.project_name}-db"
-    Environment = var.environment
-  }
-}
-  username = var.db_username
-  password = aws_secretsmanager_secret_version.db_password.secret_string
-
-  # Networking
-  db_subnet_group_name   = aws_db_subnet_group.db_subnets.name
-  vpc_security_group_ids = [aws_security_group.rds_sg.id]
-  publicly_accessible    = false
-
-  # High Availability
-  multi_az = true
-
-  # Backups
-  backup_retention_period = var.environment == "production" ? 30 : 7
-  backup_window           = "03:00-04:00"
-  maintenance_window      = "sun:04:00-sun:05:00"
-  copy_tags_to_snapshot   = true
-
-  # Snapshots
-  skip_final_snapshot       = var.environment != "production"
-  final_snapshot_identifier = var.environment == "production" ? "${var.project_name}-db-final-snapshot-${formatdate("YYYY-MM-DD-hhmm", timestamp())}" : null
-
-  # Protección
-  deletion_protection = var.environment == "production"
-
-  # Logging
-  enabled_cloudwatch_logs_exports = ["error", "general", "slowquery"]
-
-  # Performance Insights
-  performance_insights_enabled = var.environment == "production"
-  performance_insights_retention_period = 7
-
-  # Parámetros
-  parameter_group_name = aws_db_parameter_group.mysql.name
-
-  tags = {
-    Name        = "${var.project_name}-rds"
-    Environment = var.environment
-  }
-
-  depends_on = [
     aws_db_subnet_group.db_subnets
   ]
 }
