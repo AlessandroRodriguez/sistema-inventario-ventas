@@ -20,9 +20,9 @@ resource "random_id" "bucket_id" {
 # S3 Bucket para Frontend
 resource "aws_s3_bucket" "frontend_bucket" {
   bucket = "${var.project_name}-frontend-${random_id.bucket_id.hex}"
-
   tags = {
     Name = "${var.project_name}-frontend"
+    Environment = var.environment
   }
 }
 

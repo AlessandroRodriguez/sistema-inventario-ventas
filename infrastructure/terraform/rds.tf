@@ -1,3 +1,20 @@
+resource "aws_db_instance" "mysql" {
+  identifier         = "${var.project_name}-db"
+  engine             = "mysql"
+  engine_version     = "8.0.39"
+  instance_class     = var.db_instance_class
+  allocated_storage  = 20
+  storage_type       = "gp3"
+  storage_encrypted  = true
+  db_name            = var.db_name
+  username           = var.db_username
+  password           = random_password.db_password.result
+  db_subnet_group_name = aws_db_subnet_group.db_subnets.name
+  tags = {
+    Name        = "${var.project_name}-db"
+    Environment = var.environment
+  }
+}
 terraform {
   required_version = ">= 1.0"
   required_providers {
@@ -12,19 +29,17 @@ terraform {
   }
 }
 
-# Generar contraseña segura
 resource "random_password" "db_password" {
   length  = 32
   special = true
 }
 
-# Almacenar contraseña en AWS Secrets Manager
 resource "aws_secretsmanager_secret" "db_password" {
   name                    = "${var.project_name}/rds/password"
   recovery_window_in_days = 7
-
   tags = {
     Name = "${var.project_name}-db-password"
+    Environment = var.environment
   }
 }
 
@@ -34,30 +49,35 @@ resource "aws_secretsmanager_secret_version" "db_password" {
   secret_string = random_password.db_password.result
 }
 
-# DB Subnet Group
 resource "aws_db_subnet_group" "db_subnets" {
   name       = "${var.project_name}-db-subnet"
   subnet_ids = aws_subnet.private[*].id
-
   tags = {
     Name = "${var.project_name}-db-subnet"
+    Environment = var.environment
   }
 }
 
-# RDS MySQL Multi-AZ
 resource "aws_db_instance" "mysql" {
   identifier     = "${var.project_name}-db"
   engine         = "mysql"
   engine_version = "8.0.39"
   instance_class = var.db_instance_class
-
-  # Almacenamiento
   allocated_storage = 20
   storage_encrypted = true
   storage_type      = "gp3"
-
-  # Credenciales
   db_name  = var.db_name
+  username = var.db_username
+  password = random_password.db_password.result
+  db_subnet_group_name = aws_db_subnet_group.db_subnets.name
+  vpc_security_group_ids = [aws_security_group.rds_sg.id]
+  multi_az = true
+  skip_final_snapshot = true
+  tags = {
+    Name = "${var.project_name}-db"
+    Environment = var.environment
+  }
+}
   username = var.db_username
   password = aws_secretsmanager_secret_version.db_password.secret_string
 
