@@ -4,165 +4,57 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sistema de Inventario y Ventas</title>
-  
-  <!-- Estilos globales -->
   <link rel="stylesheet" href="./assets/css/styles.css" />
-  
   <style>
-    body {
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-      background: #f2f4f8;
-      margin: 0;
-      padding: 0;
-    }
+    body { font-family: Arial, sans-serif; background-color: #f4f6f8; margin: 0; }
+    header { background: #1976d2; color: white; padding: 1rem; text-align: center; }
+    nav { background: #1565c0; color: white; display: flex; justify-content: space-around; padding: 0.5rem; }
+    nav button { background: none; border: none; color: white; cursor: pointer; font-size: 16px; }
+    nav button:hover { text-decoration: underline; }
 
-    h2 {
-      text-align: center;
-      margin-top: 1.5rem;
-      color: #333;
-    }
+    #login-section { text-align: center; margin-top: 10%; }
+    #login-section form { display: inline-block; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    #login-section input { display: block; margin: 10px auto; padding: 8px; width: 200px; }
+    #login-section button { background: #1976d2; color: white; padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; }
 
-    /* 🔎 Controles de búsqueda y filtro */
-    .filtros {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 1rem;
-      margin: 1rem auto;
-      flex-wrap: wrap;
-    }
-
-    input[type="text"], select {
-      padding: 0.6rem 1rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-      width: 220px;
-    }
-
-    #lista-productos {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
-      max-width: 1000px;
-      margin: 0 auto;
-    }
-
-    .producto {
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 1rem;
-      text-align: center;
-      transition: 0.3s;
-    }
-
-    .producto:hover {
-      transform: scale(1.03);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    }
-
-    .producto h3 {
-      margin-bottom: 0.5rem;
-      color: #333;
-    }
-
-    .producto p {
-      margin: 0.2rem 0;
-      color: #555;
-      font-size: 0.9rem;
-    }
+    #app { display: none; }
+    #content { padding: 2rem; }
+    table { width: 100%; border-collapse: collapse; margin-top: 1rem; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+    th { background-color: #f0f0f0; }
   </style>
 </head>
-
 <body>
-  <div id="app-header"></div>
+  <!-- LOGIN -->
+  <div id="login-section">
+    <h1>Iniciar Sesión</h1>
+    <form id="login-form">
+      <input type="text" id="username" placeholder="Usuario" required />
+      <input type="password" id="password" placeholder="Contraseña" required />
+      <button type="submit">Ingresar</button>
+    </form>
+    <p id="login-error" style="color: red; display: none;">Usuario o contraseña incorrectos</p>
+  </div>
 
-  <main id="app-content" tabindex="-1" aria-label="Contenido principal">
-    <h2>📦 Lista de Productos</h2>
+  <!-- APP -->
+  <div id="app">
+    <header>
+      <h2>Sistema de Inventario y Ventas</h2>
+      <button id="logout-btn" style="float: right; background: white; color: #1976d2; border: none; padding: 5px 10px; cursor: pointer;">Cerrar sesión</button>
+    </header>
+    <nav>
+      <button id="btn-inicio">🏠 Inicio</button>
+      <button id="btn-productos">📦 Productos</button>
+      <button id="btn-inventario">📊 Inventario</button>
+      <button id="btn-usuarios">👤 Usuarios</button>
+    </nav>
+    <main id="content">
+      <h3>Bienvenido al Sistema de Inventario</h3>
+      <p>Seleccione una opción del menú para comenzar.</p>
+    </main>
+  </div>
 
-    <!-- 🔍 Barra de búsqueda y filtro -->
-    <div class="filtros">
-      <input type="text" id="buscar" placeholder="Buscar producto..." />
-      <select id="filtro-categoria">
-        <option value="todos">Todas las categorías</option>
-      </select>
-    </div>
-
-    <div id="lista-productos">Cargando productos...</div>
-  </main>
-
-  <div id="app-footer"></div>
-
-  <script type="module" src="./assets/js/main.js"></script>
-
-  <script>
-    let productos = [];
-
-    async function cargarProductos() {
-      try {
-        const res = await fetch("http://localhost:8000/api/productos");
-        productos = await res.json();
-        mostrarProductos(productos);
-        cargarCategorias();
-      } catch (error) {
-        console.error("Error al cargar productos:", error);
-        document.getElementById("lista-productos").innerHTML =
-          "<p style='color:red; text-align:center;'>Error al cargar los productos.</p>";
-      }
-    }
-
-    function mostrarProductos(lista) {
-      const contenedor = document.getElementById("lista-productos");
-      contenedor.innerHTML = "";
-
-      if (lista.length === 0) {
-        contenedor.innerHTML = "<p style='text-align:center;'>No se encontraron productos.</p>";
-        return;
-      }
-
-      lista.forEach(p => {
-        const item = document.createElement("div");
-        item.className = "producto";
-        item.innerHTML = `
-          <h3>${p.nombre}</h3>
-          <p><strong>Categoría:</strong> ${p.categoria}</p>
-          <p><strong>Precio:</strong> S/ ${p.precio.toFixed(2)}</p>
-          <p><strong>Stock:</strong> ${p.stock}</p>
-        `;
-        contenedor.appendChild(item);
-      });
-    }
-
-    function cargarCategorias() {
-      const select = document.getElementById("filtro-categoria");
-      const categorias = [...new Set(productos.map(p => p.categoria))];
-      categorias.forEach(cat => {
-        const option = document.createElement("option");
-        option.value = cat;
-        option.textContent = cat;
-        select.appendChild(option);
-      });
-    }
-
-    document.getElementById("buscar").addEventListener("input", filtrar);
-    document.getElementById("filtro-categoria").addEventListener("change", filtrar);
-
-    function filtrar() {
-      const texto = document.getElementById("buscar").value.toLowerCase();
-      const categoria = document.getElementById("filtro-categoria").value;
-
-      const filtrados = productos.filter(p => {
-        const coincideNombre = p.nombre.toLowerCase().includes(texto);
-        const coincideCategoria = categoria === "todos" || p.categoria === categoria;
-        return coincideNombre && coincideCategoria;
-      });
-
-      mostrarProductos(filtrados);
-    }
-
-    cargarProductos();
-  </script>
+  <script type="module" src="./assets/js/app.js"></script>
 </body>
 </html>
+
