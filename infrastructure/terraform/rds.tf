@@ -1,6 +1,38 @@
 resource "aws_db_instance" "mysql" {
   identifier         = "${var.project_name}-db"
   engine             = "mysql"
+  instance_class     = var.db_instance_class
+  allocated_storage  = 20
+  username           = var.db_username
+  password           = random_password.db_password.result
+  db_name            = var.db_name
+}
+resource "aws_db_instance" "mysql" {
+  identifier         = "${var.project_name}-db"
+  engine             = "mysql"
+  instance_class     = var.db_instance_class
+  allocated_storage  = 20
+  username           = var.db_username
+  password           = random_password.db_password.result
+  db_name            = var.db_name
+}
+resource "aws_db_instance" "mysql" {
+  identifier         = "${var.project_name}-db"
+  engine             = "mysql"
+  engine_version     = "8.0.39"
+  instance_class     = var.db_instance_class
+  allocated_storage  = 20
+  storage_type       = "gp3"
+  storage_encrypted  = true
+  db_name            = var.db_name
+  username           = var.db_username
+  password           = random_password.db_password.result
+  db_subnet_group_name = aws_db_subnet_group.db_subnets.name
+  vpc_security_group_ids = [aws_security_group.rds_sg.id]
+}
+resource "aws_db_instance" "mysql" {
+  identifier         = "${var.project_name}-db"
+  engine             = "mysql"
   engine_version     = "8.0.39"
   instance_class     = var.db_instance_class
   allocated_storage  = 20
